@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Passeio {
+  id               Int                @id @default(autoincrement())
+  nome             String
+  descricao        String?
+  precoCentavos    Int                @default(0)
+  duracaoMin       Int?
+  ativo            Boolean            @default(true)
+  imagens          Imagem[]
+  disponibilidades Disponibilidade[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model Imagem {
+  id        Int     @id @default(autoincrement())
+  url       String
+  principal Boolean  @default(false)
+  passeioId Int
+  passeio   Passeio  @relation(fields: [passeioId], references: [id], onDelete: Cascade)
+}
+
+model Disponibilidade {
+  id         Int                   @id @default(autoincrement())
+  data       DateTime              // 00:00:00 local
+  capacidade Int                   @default(0)
+  reservados Int                   @default(0)
+  status     DisponibilidadeStatus @default(ABERTO)
+  passeioId  Int
+  passeio    Passeio               @relation(fields: [passeioId], references: [id], onDelete: Cascade)
+
+  @@unique([passeioId, data])
+}
+
+enum DisponibilidadeStatus {
+  ABERTO
+  FECHADO
+}
+
+model Lead {
+  id         Int      @id @default(autoincrement())
+  nome       String
+  email      String
+  mensagem   String
+  passeio    String?
+  createdAt  DateTime @default(now())
+}

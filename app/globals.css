@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --bg: #0f172a; }
+html, body { height: 100%; }
+body {
+  /* Tailwind utilities + background gradient */
+  min-height: 100vh;
+  color: rgb(226 232 240);
+  background-color: #0b1220;
+  background: radial-gradient(1200px 500px at top left, #111 0%, var(--bg) 60%, #070a12 100%);
+}
+.container { max-width: 64rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }
