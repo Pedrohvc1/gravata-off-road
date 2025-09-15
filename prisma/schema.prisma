@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Passeio {
+  id          String   @id @default(cuid())
+  nome        String
+  descricao   String
+  duracao     String
+  preco       Float
+  ativo       Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  imagens         Imagem[]
+  disponibilidade Disponibilidade[]
+  leads           Lead[]
+
+  @@map("passeios")
+}
+
+model Imagem {
+  id        String   @id @default(cuid())
+  url       String
+  principal Boolean  @default(false)
+  passeioId String
+  createdAt DateTime @default(now())
+
+  passeio Passeio @relation(fields: [passeioId], references: [id], onDelete: Cascade)
+
+  @@map("imagens")
+}
+
+enum StatusDisponibilidade {
+  ABERTO
+  FECHADO
+  LOTADO
+}
+
+model Disponibilidade {
+  id         String                @id @default(cuid())
+  data       DateTime
+  capacidade Int
+  reservado  Int                   @default(0)
+  status     StatusDisponibilidade @default(ABERTO)
+  passeioId  String
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
+
+  passeio Passeio @relation(fields: [passeioId], references: [id], onDelete: Cascade)
+
+  @@unique([data, passeioId])
+  @@map("disponibilidades")
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  nome      String
+  email     String
+  telefone  String?
+  mensagem  String?
+  passeioId String?
+  createdAt DateTime @default(now())
+
+  passeio Passeio? @relation(fields: [passeioId], references: [id])
+
+  @@map("leads")
+}

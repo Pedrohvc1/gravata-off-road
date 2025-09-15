@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --bg: #0f172a; }
+html, body { height: 100%; }
+body {
+  @apply min-h-screen text-slate-100 bg-slate-950;
+  background: radial-gradient(1200px 500px at top left, #111 0%, var(--bg) 60%, #070a12 100%);
+}
+.container { @apply max-w-5xl mx-auto px-4; }
